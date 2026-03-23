@@ -18,7 +18,7 @@ export async function POST(req: Request) {
             from: "AdikLabs <akshay@adiklabs.com>",
             to: "akshay@adiklabs.com",
             subject: `New ${interest} Inquiry from ${name}`,
-            reply_to: email,
+            replyTo: email,
             html: `
     <h2>New Contact Message</h2>
     <p><strong>Name:</strong> ${name}</p>
