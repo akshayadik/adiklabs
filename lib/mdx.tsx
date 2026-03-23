@@ -61,7 +61,14 @@ export async function parseMDX(source: string) {
       },
     },
     components: {
-      Mermaid,
+      // Intercept code blocks for Mermaid rendering
+      code: (props: any) => {
+        const { children, className } = props;
+        if (className === "language-mermaid") {
+          return <Mermaid chart={children as string} />;
+        }
+        return <code {...props} />;
+      },
       // AdikLabs Branded Elements
       h1: (props) => <h1 className="text-3xl font-bold text-primary mb-4" {...props} />,
       h2: (props) => <h2 className="text-2xl font-semibold text-primary mt-8 mb-4" {...props} />,
