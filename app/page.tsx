@@ -1,65 +1,116 @@
-import Image from "next/image";
+import Section from "./components/Section";
+import Card from "./components/Card";
+import Link from "next/link";
+import Footer from "./components/Footer";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <main>
+
+      {/* HERO */
+
+      }
+      <section className="relative overflow-hidden bg-bg">
+
+        {/* GRADIENT BACKGROUND GLOW */}
+        <div className="absolute inset-0 -z-10">
+          <div className="w-full h-[400px] bg-gradient-to-r from-violet/20 to-blue/20 blur-3xl"></div>
+        </div>
+
+        <div className="max-w-4xl mx-auto text-center px-6 py-32">
+
+          {/* BRAND NAME */}
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-tight">
+            <span className="text-primary">Adik</span>
+            <span className="bg-gradient-to-r from-violet to-blue bg-clip-text text-transparent">
+              Labs
+            </span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+
+          {/* TAGLINE */}
+          <p className="mt-4 text-lg text-muted">
+            AI.Cloud.System Solution
           </p>
+
+          {/* VALUE PROP */}
+          <p className="mt-6 text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            Designing scalable distributed systems and building intelligent AI solutions
+            with modern cloud-native architectures.
+          </p>
+
+          {/* CTA BUTTONS */}
+          <div className="mt-10 flex justify-center gap-4">
+
+            <Link
+              href="/architecture"
+              className="px-6 py-3 rounded-xl bg-primary text-white font-medium shadow-md hover:shadow-lg transition"
+            >
+              Explore Architecture
+            </Link>
+
+            <Link
+              href="/insights"
+              className="px-6 py-3 rounded-xl border border-gray-300 hover:bg-gray-100 transition"
+            >
+              Read Insights
+            </Link>
+
+          </div>
+
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* ARCHITECTURE */}
+      <Section title="System Architecture">
+        <div className="grid md:grid-cols-3 gap-6">
+          <Card
+            title="Rate Limiter"
+            description="Token bucket, sliding window, distributed control."
+            href="/content/system-architecture/rate-limiter"
+          />
+          <Card
+            title="Blob Storage"
+            description="Token bucket, sliding window, distributed control."
+            href="/content/system-architecture/rate-limiter"
+          />
+          <Card
+            title="Pub/Sub"
+            description="Token bucket, sliding window, distributed control."
+            href="/content/system-architecture/rate-limiter"
+          />
         </div>
-      </main>
-    </div>
+      </Section>
+
+      {/* AI SYSTEMS */}
+      <Section title="AI Systems">
+        <div className="grid md:grid-cols-3 gap-6">
+          <Card
+            title="LLM Infrastructure"
+            description="Serving, scaling and monitoring LLMs."
+            href="/content/system-architecture/rate-limiter"
+          />
+          <Card
+            title="Vector Databases"
+            description="Similarity search and embeddings."
+            href="/content/system-architecture/rate-limiter"
+          />
+          <Card
+            title="AI Pipelines"
+            description="End-to-end AI workflows and observability."
+            href="/content/system-architecture/rate-limiter"
+          />
+        </div>
+      </Section>
+
+      {/* IMPACT */}
+      <Section title="Impact">
+        <p className="text-muted max-w-3xl">
+          Helping organizations build resilient distributed systems and adopt AI responsibly
+          for real-world business outcomes.
+        </p>
+      </Section>
+
+      <Footer />
+    </main>
   );
 }
