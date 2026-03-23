@@ -68,7 +68,8 @@ export default function Footer() {
                         <option value="" className="text-black">Select Interest</option>
                         <option value="AI Systems" className="text-black">AI Systems</option>
                         <option value="Cloud Architecture" className="text-black">Cloud Architecture</option>
-                        <option value="System Design Consulting" className="text-black">System Design Consulting</option>
+                        <option value="Collaboration" className="text-black">Collaboration</option>
+                        <option value="Suggestion" className="text-black">Suggestion</option>
                     </select>
                     <textarea name="message" placeholder="How can I help you?" rows={4} required className="w-full p-3 rounded-lg bg-white/10 border border-white/20 focus:border-blue outline-none transition" />
                     
