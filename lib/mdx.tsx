@@ -5,14 +5,28 @@ import matter from 'gray-matter';
 import { compileMDX } from 'next-mdx-remote/rsc';
 import remarkGfm from 'remark-gfm';
 import Mermaid from '@/app/components/Mermaid';
-import remarkMath from 'remark-math'; // Add this
-import rehypeKatex from 'rehype-katex'; // Add this
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+
+// Define the structure of your posts based on your brand kit
+export interface Post {
+  slug: string;
+  category: string;
+  title: string;
+  description: string;
+  readTime: string;
+  level: string;
+  publishedAt: string;
+  featured?: boolean;
+  order?: number;
+  content: string;
+}
 
 const basePath = path.join(process.cwd(), 'content');
 
-export function getAllPosts() {
+export function getAllPosts(): Post[] {
   const categories = fs.readdirSync(basePath);
-  let posts: any[] = [];
+  let posts: Post[] = [];
 
   categories.forEach((category) => {
     const categoryPath = path.join(basePath, category);
@@ -21,12 +35,13 @@ export function getAllPosts() {
     files.forEach((file) => {
       const filePath = path.join(categoryPath, file);
       const content = fs.readFileSync(filePath, 'utf-8');
-      const { data } = matter(content);
+      const { data, content: body } = matter(content);
 
       posts.push({
         slug: file.replace('.mdx', ''),
         category,
-        ...data,
+        content: body,
+        ...(data as Omit<Post, 'slug' | 'category' | 'content'>),
       });
     });
   });
@@ -34,7 +49,7 @@ export function getAllPosts() {
   return posts;
 }
 
-export function getPost(category?: string, slug?: string) {
+export function getPost(category?: string, slug?: string): Post {
   if (!category || !slug) {
     throw new Error("Category or slug is missing");
   }
@@ -46,8 +61,8 @@ export function getPost(category?: string, slug?: string) {
   return {
     slug,
     category,
-    ...data,
     content: body,
+    ...(data as Omit<Post, 'slug' | 'category' | 'content'>),
   };
 }
 

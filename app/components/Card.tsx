@@ -1,6 +1,12 @@
 import Link from 'next/link'
 
-export default function Card({ title, description, href }) {
+interface CardProps {
+  title: string;
+  description: string;
+  href: string;
+}
+
+export default function Card({ title, description, href }: CardProps) {
   return (
     <Link href={href} className="block group">
       <div

@@ -1,4 +1,5 @@
-import { getPost, parseMDX } from '@/lib/mdx';
+// app/content/[category]/[slug]/page.tsx
+import { getPost, parseMDX, Post } from '@/lib/mdx'; // Import the Post interface
 
 export default async function PostPage({
     params,
@@ -6,7 +7,9 @@ export default async function PostPage({
     params: Promise<{ category: string; slug: string }>;
 }) {
     const { category, slug } = await params;
-    const post = getPost(category, slug);
+    
+    // Explicitly type the post object
+    const post: Post = getPost(category, slug);
     const content = await parseMDX(post.content);
 
     return (
@@ -16,10 +19,12 @@ export default async function PostPage({
                 <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4">
                     {post.title}
                 </h1>
+                
                 {/* Brand Dark Gray for Description */}
                 <p className="text-xl text-muted leading-relaxed">
                     {post.description}
                 </p>
+                
                 <div className="mt-6 flex gap-4 text-sm font-medium text-blue">
                     <span>{post.readTime}</span>
                     <span>•</span>
@@ -27,7 +32,6 @@ export default async function PostPage({
                 </div>
             </header>
 
-            {/* Content will now use the branded components defined in parseMDX */}
             <div className="prose prose-slate max-w-none">
                 {content}
             </div>
