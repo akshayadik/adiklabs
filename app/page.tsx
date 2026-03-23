@@ -6,108 +6,85 @@ import Footer from "./components/Footer";
 export default function Home() {
   return (
     <main>
-
-      {/* HERO */
-
-      }
+      {/* HERO SECTION */}
       <section className="relative overflow-hidden bg-bg">
-
-        {/* GRADIENT BACKGROUND GLOW */}
         <div className="absolute inset-0 -z-10">
-          <div className="w-full h-[400px] bg-gradient-to-r from-violet/20 to-blue/20 blur-3xl"></div>
+          <div className="w-full h-[400px] bg-gradient-to-r from-violet/10 to-blue/10 blur-3xl opacity-50"></div>
         </div>
 
         <div className="max-w-4xl mx-auto text-center px-6 py-32">
-
-          {/* BRAND NAME */}
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-tight">
             <span className="text-primary">Adik</span>
-            <span className="bg-gradient-to-r from-violet to-blue bg-clip-text text-transparent">
-              Labs
-            </span>
+            <span className="bg-gradient-to-r from-violet to-blue bg-clip-text text-transparent"> Labs</span>
           </h1>
 
-          {/* TAGLINE */}
-          <p className="mt-4 text-lg text-muted">
-            AI.Cloud.System Solution
+          {/* Updated Tagline per Brand Kit */}
+          <p className="mt-4 text-xl font-medium text-muted uppercase tracking-widest">
+            Scalable AI & Cloud Systems
           </p>
 
-          {/* VALUE PROP */}
-          <p className="mt-6 text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Designing scalable distributed systems and building intelligent AI solutions
-            with modern cloud-native architectures.
+          {/* Updated Core Message */}
+          <p className="mt-6 text-lg text-muted max-w-2xl mx-auto leading-relaxed">
+            Building scalable, intelligent systems using AI and cloud technologies.
           </p>
 
-          {/* CTA BUTTONS */}
           <div className="mt-10 flex justify-center gap-4">
-
             <Link
               href="/architecture"
-              className="px-6 py-3 rounded-xl bg-primary text-white font-medium shadow-md hover:shadow-lg transition"
+              className="px-6 py-3 rounded-xl bg-blue text-white font-semibold shadow-md hover:bg-opacity-90 transition"
             >
               Explore Architecture
             </Link>
-
             <Link
               href="/insights"
-              className="px-6 py-3 rounded-xl border border-gray-300 hover:bg-gray-100 transition"
+              className="px-6 py-3 rounded-xl border border-gray-300 text-primary font-medium hover:bg-white transition"
             >
               Read Insights
             </Link>
-
           </div>
-
         </div>
       </section>
 
-      {/* ARCHITECTURE */}
-      <Section title="System Architecture">
+      {/* SYSTEM ARCHITECTURE PREVIEW */}
+      <Section 
+        title={
+          <div className="flex justify-between items-end w-full">
+            <span>System Architecture</span>
+            <Link href="/architecture" className="text-blue text-sm font-semibold hover:underline mb-1">
+              View All Architecture →
+            </Link>
+          </div>
+        }
+      >
         <div className="grid md:grid-cols-3 gap-6">
           <Card
             title="Rate Limiter"
             description="Token bucket, sliding window, distributed control."
             href="/content/system-architecture/rate-limiter"
           />
-          <Card
-            title="Blob Storage"
-            description="Token bucket, sliding window, distributed control."
-            href="/content/system-architecture/rate-limiter"
-          />
-          <Card
-            title="Pub/Sub"
-            description="Token bucket, sliding window, distributed control."
-            href="/content/system-architecture/rate-limiter"
-          />
+          {/* ... other preview cards */}
         </div>
       </Section>
 
-      {/* AI SYSTEMS */}
-      <Section title="AI Systems">
+      {/* AI SYSTEMS PREVIEW */}
+      <Section 
+        title={
+          <div className="flex justify-between items-end w-full">
+            <span>AI Systems</span>
+            <Link href="/ai-systems" className="text-blue text-sm font-semibold hover:underline mb-1">
+              View All AI Systems →
+            </Link>
+          </div>
+        }
+      >
         <div className="grid md:grid-cols-3 gap-6">
           <Card
             title="LLM Infrastructure"
             description="Serving, scaling and monitoring LLMs."
-            href="/content/system-architecture/rate-limiter"
+            href="/content/ai-systems/llm-infrastructure"
           />
-          <Card
-            title="Vector Databases"
-            description="Similarity search and embeddings."
-            href="/content/system-architecture/rate-limiter"
-          />
-          <Card
-            title="AI Pipelines"
-            description="End-to-end AI workflows and observability."
-            href="/content/system-architecture/rate-limiter"
-          />
+          {/* ... other preview cards */}
         </div>
-      </Section>
-
-      {/* IMPACT */}
-      <Section title="Impact">
-        <p className="text-muted max-w-3xl">
-          Helping organizations build resilient distributed systems and adopt AI responsibly
-          for real-world business outcomes.
-        </p>
       </Section>
 
       <Footer />

@@ -2,44 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --primary: #0B1F3A; /* Brand Navy Blue */
+  --bg: #F7F9FC;      /* Brand Light Gray */
+}
+
 body {
-  @apply bg-bg text-black;
+  @apply bg-bg text-black font-sans; /* Apply brand background and font */
 }
 
-h1 {
-  letter-spacing: -0.03em;
-}
-
-h2,
-h3 {
+h1, h2, h3 {
+  @apply text-primary; /* Use Navy Blue for headings */
   letter-spacing: -0.02em;
-}
-
-@keyframes gradientMove {
-  0% {
-    transform: translateX(-10%);
-  }
-
-  50% {
-    transform: translateX(10%);
-  }
-
-  100% {
-    transform: translateX(-10%);
-  }
 }
 
 html {
   scroll-behavior: smooth;
-}
-:root {
-  --primary: #0f172a; /* navy */
-}
-
-.text-primary {
-  color: var(--primary);
-}
-
-.bg-bg {
-  background-color: #f8fafc;
 }

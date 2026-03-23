@@ -34,28 +34,26 @@ export default function Footer() {
     }
 
     return (
-        <footer id="contact"
-            className="bg-gray-950 text-white mt-20">
+        // Inside Footer component
+        <footer id="contact" className="bg-primary text-white mt-20"> {/* Use Navy background */}
             <div className="max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-12">
-
-                {/* LEFT: BRAND */}
                 <div>
                     <h3 className="text-2xl font-bold">
                         <span className="text-white">Adik</span>
-                        <span className="text-violet-400">Labs</span>
+                        <span className="text-blue">Labs</span> {/* Blue accent for footer logo */}
                     </h3>
-
-                    <p className="mt-4 text-gray-400 max-w-md">
-                        AI • Cloud • System Design consulting. Helping organizations build scalable,
-                        intelligent systems.
+                    <p className="mt-4 text-gray-300 max-w-md">
+                        Scalable AI & Cloud Systems. {/* Brand Tagline */}
                     </p>
-
+                    <p className="mt-4 text-gray-300 max-w-md">
+                        Building scalable, intelligent systems using AI and cloud technologies.
+                    </p>
                     <p className="mt-6 text-sm text-gray-500">
                         © {new Date().getFullYear()} AdikLabs
                     </p>
                 </div>
 
-                {/* RIGHT: CONTACT FORM */}
+                {/* ... CONTACT FORM ... */}
                 <div>
                     <h4 className="text-lg font-semibold mb-4">
                         Get in touch
@@ -101,7 +99,7 @@ export default function Footer() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full py-3 rounded-lg bg-gradient-to-r from-violet-500 to-blue-500 font-medium hover:opacity-90 transition disabled:opacity-50"
+                            className="w-full py-3 rounded-lg bg-blue font-semibold hover:bg-opacity-90 transition disabled:opacity-50"
                         >
                             {loading ? "Sending..." : "Send Message"}
                         </button>

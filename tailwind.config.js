@@ -8,11 +8,14 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "#0B1F3A",   // Navy
-        violet: "#7A3FF2",
-        blue: "#2D9CDB",
-        muted: "#4F4F4F",
-        bg: "#F7F9FC",
+        primary: "#0B1F3A",   // Navy Blue for "Adik" text
+        violet: "#7A3FF2",    // Gradient start
+        blue: "#2D9CDB",      // Gradient end / Primary Button
+        muted: "#4F4F4F",     // Tagline / Dark Gray
+        bg: "#F7F9FC",        // Light Gray background
+      },
+      fontFamily: {
+        sans: ['var(--font-poppins)', 'Inter', 'sans-serif'], // Set Poppins as primary
       },
     },
   },
