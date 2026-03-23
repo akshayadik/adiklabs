@@ -19,3 +19,17 @@ h1, h2, h3 {
 html {
   scroll-behavior: smooth;
 }
+/* app/globals.css */
+
+/* Force all text inside Mermaid diagrams to be visible unless explicitly styled */
+.mermaid text, 
+.mermaid .node label, 
+.mermaid .edgeLabel {
+  fill: #0B1F3A !important; /* Brand Navy */
+}
+
+/* Ensure white text is maintained for your specific dark nodes */
+.mermaid .startNode text,
+.mermaid .storageNode text {
+  fill: #FFFFFF !important;
+}

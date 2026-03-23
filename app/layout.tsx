@@ -17,6 +17,7 @@ export const metadata = {
 
 import { Poppins } from 'next/font/google';
 import Navbar from "./components/Navbar";
+import 'katex/dist/katex.min.css' 
 import "./globals.css";
 
 const poppins = Poppins({
