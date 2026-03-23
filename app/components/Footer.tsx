@@ -1,13 +1,12 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
 
 export default function Footer() {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
-    // 1. Manage the year in state to prevent server/client mismatch
     const [year, setYear] = useState<number | string>("");
 
+    // Fix hydration: Only calculate year on the client
     useEffect(() => {
         setYear(new Date().getFullYear());
     }, []);
@@ -15,8 +14,32 @@ export default function Footer() {
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setLoading(true);
-        // ... (rest of your existing handleSubmit logic)
-        setLoading(false);
+        setSuccess(false);
+
+        try {
+            const formData = new FormData(e.currentTarget);
+            const data = Object.fromEntries(formData.entries());
+
+            const res = await fetch("/api/contact", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+            });
+
+            if (res.ok) {
+                setSuccess(true);
+                (e.target as HTMLFormElement).reset();
+            } else {
+                const errorData = await res.json();
+                alert(`Error: ${errorData.error || "Failed to send message"}`);
+            }
+        } catch (err) {
+            console.error("Submission error:", err);
+            alert("Network error. Please try again later.");
+        } finally {
+            // Ensure button is re-enabled regardless of success/failure
+            setLoading(false);
+        }
     }
 
     return (
@@ -24,7 +47,7 @@ export default function Footer() {
             <div className="max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-12">
                 <div>
                     <h3 className="text-2xl font-bold">
-                        {/* 2. CRITICAL: Keep spans on the same line to remove whitespace text nodes */}
+                        {/* Fix hydration: No whitespace between spans */}
                         <span className="text-white">Adik</span><span className="bg-gradient-to-r from-violet to-blue bg-clip-text text-transparent">Labs</span>
                     </h3>
                     <p className="mt-4 text-gray-300 max-w-md">
@@ -32,69 +55,32 @@ export default function Footer() {
                         Building scalable, intelligent systems using AI and cloud technologies.
                     </p>
                     <p className="mt-6 text-sm text-gray-500">
-                        {/* 3. Use the year from state */}
                         © {year} AdikLabs
                     </p>
                 </div>
 
-                {/* ... CONTACT FORM ... */}
-                <div>
-                    <h4 className="text-lg font-semibold mb-4">
-                        Get in touch
-                    </h4>
-
-                    <form onSubmit={handleSubmit} className="space-y-4">
-
-                        <input
-                            name="name"
-                            placeholder="Your name"
-                            required
-                            className="w-full px-4 py-3 rounded-lg bg-gray-900 border border-gray-700 focus:ring-2 focus:ring-violet-500 outline-none"
-                        />
-
-                        <input
-                            name="email"
-                            type="email"
-                            placeholder="Your email"
-                            required
-                            className="w-full px-4 py-3 rounded-lg bg-gray-900 border border-gray-700 focus:ring-2 focus:ring-violet-500 outline-none"
-                        />
-
-                        <select
-                            name="interest"
-                            required
-                            className="w-full px-4 py-3 rounded-lg bg-gray-900 border border-gray-700 focus:ring-2 focus:ring-violet-500 outline-none"
-                        >
-                            <option value="">Select your interest</option>
-                            <option value="AI Systems">AI Systems</option>
-                            <option value="Cloud Architecture">Cloud Architecture</option>
-                            <option value="System Design Consulting">System Design Consulting</option>
-                            <option value="Collaboration">Collaboration</option>
-                        </select>
-
-                        <textarea
-                            name="message"
-                            rows={4}
-                            placeholder="Your message"
-                            required
-                            className="w-full px-4 py-3 rounded-lg bg-gray-900 border border-gray-700 focus:ring-2 focus:ring-violet-500 outline-none"
-                        />
-
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full py-3 rounded-lg bg-blue font-semibold hover:bg-opacity-90 transition disabled:opacity-50"
-                        >
-                            {loading ? "Sending..." : "Send Message"}
-                        </button>
-
-                        {success && (
-                            <p className="text-green-400 text-sm">
-                                Message sent successfully 🚀
-                            </p>
-                        )}
-                    </form>
-                </div>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="grid md:grid-cols-2 gap-4">
+                        <input name="name" placeholder="Name" required className="p-3 rounded-lg bg-white/10 border border-white/20 focus:border-blue outline-none transition" />
+                        <input name="email" type="email" placeholder="Email" required className="p-3 rounded-lg bg-white/10 border border-white/20 focus:border-blue outline-none transition" />
+                    </div>
+                    <select name="interest" required className="w-full p-3 rounded-lg bg-white/10 border border-white/20 focus:border-blue outline-none transition">
+                        <option value="" className="text-black">Select Interest</option>
+                        <option value="AI Systems" className="text-black">AI Systems</option>
+                        <option value="Cloud Architecture" className="text-black">Cloud Architecture</option>
+                        <option value="System Design Consulting" className="text-black">System Design Consulting</option>
+                    </select>
+                    <textarea name="message" placeholder="How can I help you?" rows={4} required className="w-full p-3 rounded-lg bg-white/10 border border-white/20 focus:border-blue outline-none transition" />
+                    
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full py-3 rounded-lg bg-blue font-semibold hover:bg-opacity-90 transition disabled:opacity-50"
+                    >
+                        {loading ? "Sending..." : "Send Message"}
+                    </button>
+                    {success && <p className="text-blue text-sm mt-2">Message sent! I'll get back to you shortly. 🚀</p>}
+                </form>
             </div>
         </footer>
     );
