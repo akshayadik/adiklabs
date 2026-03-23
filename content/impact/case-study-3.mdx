@@ -1,0 +1,57 @@
+---
+title: "Beyond the Batch: Engineering Sub-Second Real-Time Analytics"
+description: "How we replaced stale batch processing with a streaming-first OLAP architecture using Apache Pinot and Kafka to enable instant operational decision-making."
+category: "impact"
+tags: [
+  "real-time-analytics", 
+  "apache-pinot", 
+  "kafka", 
+  "olap", 
+  "system-design", 
+  "data-engineering"
+]
+level: "advanced"
+readTime: "7 min"
+publishedAt: "2026-03-23"
+featured: true
+order: 3
+---
+
+This restructuring focuses on the transition from "reactive" data to "proactive" insights. By framing the shift from batch processing to real-time OLAP as a competitive necessity, the article becomes much more compelling for a professional portfolio.
+
+## Beyond the Batch: Engineering Sub-Second Real-Time Analytics
+
+### Executive Summary
+In modern operations, data that is an hour old is often already obsolete. This project involved migrating from a legacy batch-heavy environment to a **streaming-first analytics pipeline**. By leveraging Apache Pinot and Kafka, we empowered business teams to query high-velocity data streams with sub-second response times, turning raw events into immediate action.
+
+### The Challenge: Data Stale on Arrival
+The primary friction point was the "latency gap." Traditional systems were failing to keep up with the speed of the business:
+* **The Batch Bottleneck**: Legacy systems could not process high-volume streaming data fast enough to provide relevant intraday insights.
+* **Query Performance**: Business users required complex aggregations across millions of rows without the typical "coffee break" wait times.
+* **Operational Blindness**: Without real-time visibility into campaign performance, the team was essentially flying blind between batch runs.
+
+### The Intuitive Insight: "The Rearview Mirror vs. The Windshield"
+> **Marketable Analogy**: Batch processing is like driving a car using only the rearview mirror—you know exactly where you’ve been, but you can't see the curve in the road ahead. 
+> 
+> Real-time analytics flips the script. We built a **"windshield" architecture** that allows the business to see the road as it unfolds, enabling them to steer the campaign in real-time rather than reviewing the wreckage the next morning.
+
+### The "Streaming-First" Architecture
+We moved away from "store then process" to a model of **"process as it flows."**
+
+* **Kafka Ingestion Layer**: Acted as the high-throughput nervous system, ensuring data was captured and buffered reliably as it was generated.
+* **Apache Pinot for Real-Time OLAP**: We integrated Pinot specifically for its ability to perform low-latency, user-facing analytics on fresh data.
+* **Columnar Storage & Indexing**: Data was structured to prioritize fast aggregations and filtering, ensuring that even complex "group by" queries returned results instantly.
+
+### Key Engineering Decisions
+* **OLAP over Traditional DBs**: We chose a specialized real-time OLAP engine (Pinot) over standard relational databases to handle the high-cardinality and ingestion rates that would have choked a traditional system.
+* **Optimizing for Query Speed**: We made an explicit trade-off: **optimizing schema design for query performance over storage efficiency.** In a world of cheap storage, the real cost is a slow decision.
+* **Freshness as a Priority**: We prioritized data "freshness" and speed of access over historical completeness for operational use cases.
+
+### Impact & Business Evolution
+The move to sub-second analytics fundamentally changed how the business operated:
+* **Instantaneous Insights**: Achieved consistent **sub-second query performance**, even during peak traffic periods.
+* **Operational Agility**: Business teams shifted from weekly reviews to real-time campaign optimization.
+* **Reduced Overhead**: Dramatically reduced the reliance on brittle, multi-stage batch processing jobs.
+* **Faster Decision Loops**: The time from "event occurred" to "decision made" dropped from hours to seconds.
+
+---

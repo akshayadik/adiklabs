@@ -72,7 +72,7 @@ export default function Footer() {
                         <option value="Suggestion" className="text-black">Suggestion</option>
                     </select>
                     <textarea name="message" placeholder="How can I help you?" rows={4} required className="w-full p-3 rounded-lg bg-white/10 border border-white/20 focus:border-blue outline-none transition" />
-                    
+
                     <button
                         type="submit"
                         disabled={loading}

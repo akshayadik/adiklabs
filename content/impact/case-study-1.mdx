@@ -1,0 +1,55 @@
+---
+title: "Scaling Real-Time AI Decisioning: High-Throughput Architecture for 15K+ RPS"
+description: "A deep dive into engineering a distributed, event-driven system capable of sub-100ms latency at scale using Kafka, Bloom filters, and in-memory caching."
+category: "impact"
+tags: [
+  "distributed-systems", 
+  "scalability", 
+  "kafka", 
+  "event-driven", 
+  "real-time-data", 
+  "bloom-filters",
+  "system-design"
+]
+level: "advanced"
+readTime: "8 min"
+publishedAt: "2026-03-22"
+featured: true
+order: 1
+---
+
+This case study highlights a significant achievement in high-throughput engineering. Below is a refined version of your content, designed to be both technically rigorous and marketable to potential clients or stakeholders.
+
+### Executive Summary
+In high-stakes digital environments, the window to make a "correct" decision is measured in milliseconds. This project involved re-engineering a decisioning engine to handle massive traffic spikes while maintaining strict performance benchmarks for campaign targeting and frequency capping .
+
+### The Challenge: Speed vs. Scale
+The primary hurdle was not just the volume of traffic, but the complexity of the rules being applied to it.
+* **Throughput**: Sustain a baseline of **15,000+ requests per second**.
+* **Latency**: Ensure the entire decisioning loop—from request to response—completed in **under 100ms**.
+* **Complexity**: Manage high-cardinality data and dynamic targeting rules without creating system bottlenecks.
+
+### The Intuitive Insight: "The Pre-Sorted Library"
+> **Marketable Analogy**: Imagine a library where 15,000 people walk in every second asking for a specific book. If you wait for them to arrive before you start looking for the book, the system collapses. 
+> 
+> We solved this by "pre-sorting" the answers. By shifting heavy computation to **pre-processing pipelines**, we ensured that when a request arrived, the "book" was already on the counter waiting for them.
+
+### Strategic Architecture
+To achieve this level of performance, the system moved away from traditional synchronous patterns toward a more resilient, event-driven model.
+
+* **Kafka-Based Streaming**: Used as a backbone to decouple services, ensuring that a spike in one area didn't crash the entire system.
+* **Bloom Filters**: Implemented for frequency capping. This allowed the system to check if a user had already seen an ad using a tiny fraction of the memory and time required by a standard database lookup.
+* **In-Memory Caching**: Deployed distributed data stores to ensure lookups happened at RAM speeds rather than disk speeds.
+* **Stateless Scaling**: Built services that could be "cloned" (horizontally scaled) instantly to meet traffic demands.
+
+### Key Engineering Decisions
+* **Latency Over Absolute Consistency**: We optimized read paths to prioritize immediate responses. In a real-time campaign, a decision made in 50ms is more valuable than a "perfectly" consistent one made in 500ms.
+* **Event-Driven Orchestration**: Swapped slow, "wait-and-see" synchronous calls for a reactive architecture that processes data as it flows.
+
+### Impact & Business Value
+The resulting architecture transformed a potential bottleneck into a competitive advantage:
+* **Reliable Performance**: Successfully sustained **15K+ RPS** while maintaining stable, predictable latency.
+* **Lightning Fast**: Achieved a consistent **sub-100ms response time**, meeting the most demanding platform requirements.
+* **Future-Ready**: Established a high-performance foundation capable of supporting future **AI-driven decisioning** and real-time optimization.
+
+---

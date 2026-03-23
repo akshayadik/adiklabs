@@ -36,14 +36,45 @@ export default function Home() {
               Explore Architecture
             </Link>
             <Link
-              href="/insights"
+              href="/impact"
               className="px-6 py-3 rounded-xl border border-gray-300 text-primary font-medium hover:bg-white transition"
             >
-              Read Insights
+              Explore Impact
             </Link>
           </div>
         </div>
       </section>
+
+      {/* IMPACT */}
+      <Section 
+        title={
+          <div className="flex justify-between items-end w-full">
+            <span>Impact</span>
+            <Link href="/impact" className="text-blue text-sm font-semibold hover:underline mb-1">
+              View All Impact →
+            </Link>
+          </div>
+        }
+      >
+        <div className="grid md:grid-cols-3 gap-6">
+          <Card
+            title="Scaling Real-Time AI Decisioning: High-Throughput Architecture for 15K+ RPS"
+            description="A deep dive into engineering a distributed, event-driven system capable of sub-100ms latency at scale using Kafka, Bloom filters, and in-memory caching."
+            href="/content/impact/case-study-1"
+          />
+          <Card
+            title="The Architecture of Frugality: Slashing Cloud Costs by 55%"
+            description="How we transformed a bloated infrastructure into a lean, cost-aware machine by treating efficiency as a core architectural constraint rather than an operational afterthought."
+            href="/content/impact/case-study-2"
+          />
+          <Card
+            title="Architecting for Resilience: A Selective Multi-Cloud Strategy for High Availability"
+            description="A technical breakdown of building a cross-provider failover system between AWS and GCP, balancing 99.99% availability requirements against operational complexity."
+            href="/content/impact/case-study-4"
+          />
+          {/* ... other preview cards */}
+        </div>
+      </Section>
 
       {/* SYSTEM ARCHITECTURE PREVIEW */}
       <Section 
