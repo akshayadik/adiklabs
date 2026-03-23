@@ -33,3 +33,11 @@ html {
 .mermaid .storageNode text {
   fill: #FFFFFF !important;
 }
+
+/* Ensure Mermaid SVGs fill their container and scale proportionally */
+.mermaid svg {
+  max-width: 100% !important;
+  height: auto !important;
+  display: block;
+  margin: 0 auto;
+}

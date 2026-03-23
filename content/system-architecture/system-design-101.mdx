@@ -1,0 +1,60 @@
+---
+article: 1
+title: "System Design 101: Moving Beyond the Textbook"
+description: "A practical introduction to system design focusing on real-world trade-offs, scalability challenges, and consistency decisions beyond theory."
+category: "system-architecture"
+tags: ["System Design 101", "Distributed Systems", "CAP Theorem", "Scalability", "Consistency"]
+level: "basics"
+readTime: "3 min"
+publishedAt: "2026-03-22"
+featured: true
+---
+
+# System Design 101: Moving Beyond the Textbook
+
+When I first started building distributed systems, I thought "System Design" was just about drawing boxes and arrows. But after wrestling with **Spark OutOfMemory errors** and optimizing **ML inference for sub-20ms latency**, I realized it's actually the art of **managing trade-offs.**
+
+Here’s my take on the foundational pillars every engineer should master.
+
+## 1. What is System Design? (The "Why" vs. The "How")
+System design isn't just about making things work; it's about making them work **at scale.** It’s the difference between writing a script that processes a CSV and building a pipeline that handles millions of device signatures. 
+
+> **My Rule of Thumb:** A good design doesn't just solve today's problem; it anticipates where the system will break when traffic 10xs.
+
+---
+
+## 2. Requirements: Functional vs. Non-Functional
+In a professional setting, the "Non-Functional" requirements are often where the real engineering happens.
+
+* **Functional (The Features):** "The user can run a clustering logic on hotel entities."
+* **Non-Functional (The Constraints):** This is where you decide if your system is actually "production-grade." For example:
+    * **Latency:** If you're running an XGBoost model for real-time predictions, can you keep it under 20ms?
+    * **Scalability:** If your Delta Lake read volume doubles, will your Spark cluster survive or throw an OOM?
+
+---
+
+## 3. The CAP Theorem: There is No Free Lunch
+The CAP Theorem is often taught as a theoretical triangle, but in practice, it’s a **forced choice** during a network failure (Partition).
+
+* **CP (Consistency > Availability):** You choose this when data integrity is non-negotiable. Think of a **Distributed Rate Limiter** using Redis. If the nodes can't talk, you'd rather block a request than let a malicious user bypass your limits.
+* **AP (Availability > Consistency):** You choose this when the "show must go on." In a hotel entity resolution pipeline, it might be okay if a user sees a slightly older version of a cluster for a few seconds, as long as the system doesn't crash.
+
+---
+
+## 4. Consistency Models: A Sliding Scale
+We often crave **Strong Consistency**, but the "Speed of Light" problem makes it expensive.
+
+| Model | The Reality | Use Case |
+| :--- | :--- | :--- |
+| **Strong** | Your system feels like a single machine. It's slow but safe. | Transactional ledgers. |
+| **Eventual** | "It’ll get there when it gets there." High performance, but your users might see stale data. | Caching layers or "Likes" counts. |
+| **Causal** | If Task A caused Task B, they stay in that order. | Comment threads or distributed logging. |
+
+### Pro-Tip: The Latency Tax
+In my experience, moving from **Eventual** to **Strong** consistency often introduces a massive latency tax. If you're building high-speed prediction services, you almost always have to design around Eventual consistency or find clever ways to use local state.
+
+---
+## Conclusion: Design is a Conversation
+The best system design isn't the one with the most complex tech stack; it's the one that makes the most sensible trade-offs for the business. 
+
+---

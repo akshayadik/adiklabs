@@ -58,6 +58,16 @@ export default function Home() {
       >
         <div className="grid md:grid-cols-3 gap-6">
           <Card
+            title="System Design 101"
+            description="A practical introduction to system design focusing on real-world trade-offs, scalability challenges, and consistency decisions beyond theory."
+            href="/content/system-architecture/system-design-101"
+          />
+          <Card
+            title="The Scalability Blueprint: Beyond the 'Just Add More RAM' Myth"
+            description="A deep dive into the fundamental strategies for scaling modern systems, from load balancing nuances to edge computing."
+            href="/content/system-architecture/the-scalability-blueprint"
+          />
+          <Card
             title="Rate Limiter"
             description="Token bucket, sliding window, distributed control."
             href="/content/system-architecture/rate-limiter"
