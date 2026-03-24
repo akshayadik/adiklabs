@@ -2,7 +2,8 @@ import Section from "./components/Section";
 import Card from "./components/Card";
 import Link from "next/link";
 import Footer from "./components/Footer";
-import Image from "next/image"; // Add this line
+import Image from "next/image";
+import TrackedLink from "./components/TrackedLink";
 
 export default function Home() {
   return (
@@ -70,12 +71,15 @@ export default function Home() {
                   Upload your system diagrams or descriptions and get instant AI-driven feedback on scalability bottlenecks, single points of failure, and cost optimization.
                 </p>
                 <div className="flex gap-4">
-                  <Link
+                  {/* 2. Swap <Link> for <TrackedLink> and add the event props */}
+                  <TrackedLink
                     href="/case-study"
-                    className="px-6 py-3 rounded-xl bg-blue text-white font-semibold hover:shadow-lg transition-all"
+                    eventName="click_live_demo"
+                    eventCategory="homepage_showcase"
+                    className="inline-flex items-center px-6 py-3 rounded-xl bg-blue text-white font-semibold hover:bg-opacity-90 transition-all shadow-md hover:shadow-lg"
                   >
-                    Try Live Demo
-                  </Link>
+                    Try Live Demo <span className="ml-2">→</span>
+                  </TrackedLink>
                 </div>
               </div>
               {/* Direct Image Integration */}
@@ -83,12 +87,12 @@ export default function Home() {
                 {/* Wrapper div adds subtle styling and shadow to make the image pop */}
                 <div className="relative w-full max-w-[500px] rounded-xl overflow-hidden shadow-2xl border border-gray-800/20 group-hover:-translate-y-1 transition-transform duration-300">
                   <Image
-                    src="/ai-reviewer-terminal.png" 
+                    src="/ai-reviewer-terminal.png"
                     alt="AdikLabs AI Architecture Reviewer Output"
                     width={600}
                     height={400}
                     className="w-full h-auto object-contain"
-                    priority 
+                    priority
                   />
                   {/* Subtle overlay effect matching the brand */}
                   <div className="absolute inset-0 bg-blue/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
@@ -115,17 +119,17 @@ export default function Home() {
           <Card
             title="Scaling Real-Time AI Decisioning: High-Throughput Architecture for 15K+ RPS"
             description="A deep dive into engineering a distributed, event-driven system capable of sub-100ms latency at scale using Kafka, Bloom filters, and in-memory caching."
-            href="/content/impact/case-study-1"
+            href="/content/impact/impact1"
           />
           <Card
             title="The Architecture of Frugality: Slashing Cloud Costs by 55%"
             description="How we transformed a bloated infrastructure into a lean, cost-aware machine by treating efficiency as a core architectural constraint rather than an operational afterthought."
-            href="/content/impact/case-study-2"
+            href="/content/impact/impact2"
           />
           <Card
             title="Architecting for Resilience: A Selective Multi-Cloud Strategy for High Availability"
             description="A technical breakdown of building a cross-provider failover system between AWS and GCP, balancing 99.99% availability requirements against operational complexity."
-            href="/content/impact/case-study-4"
+            href="/content/impact/impact4"
           />
           {/* ... other preview cards */}
         </div>
@@ -175,9 +179,9 @@ export default function Home() {
       >
         <div className="grid md:grid-cols-3 gap-6">
           <Card
-            title="LLM Infrastructure"
-            description="Serving, scaling and monitoring LLMs."
-            href="/content/ai-systems/llm-infrastructure"
+            title="Agentic Workflows and Multi-Agent Orchestration"
+            description="A deep dive into the reasoning cores, reAct loops, and topological patterns that define modern autonomous AI systems."
+            href="/content/ai-systems/multi-agent-orchestration"
           />
           {/* ... other preview cards */}
         </div>

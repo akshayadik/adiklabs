@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import { sendGAEvent } from '@next/third-parties/google'; // 1. Import GA tracking
 
 export default function Footer() {
     const [loading, setLoading] = useState(false);
@@ -19,6 +20,7 @@ export default function Footer() {
         try {
             const formData = new FormData(e.currentTarget);
             const data = Object.fromEntries(formData.entries());
+            const interestValue = data.interest as string; // Capture the selected dropdown value
 
             const res = await fetch("/api/contact", {
                 method: "POST",
@@ -29,6 +31,11 @@ export default function Footer() {
             if (res.ok) {
                 setSuccess(true);
                 (e.target as HTMLFormElement).reset();
+                // 2. Fire the custom GA4 Event on successful submission
+                sendGAEvent('event', 'generate_lead', {
+                    event_category: 'contact_form',
+                    event_label: interestValue, 
+                });
             } else {
                 const errorData = await res.json();
                 alert(`Error: ${errorData.error || "Failed to send message"}`);

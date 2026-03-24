@@ -1,0 +1,223 @@
+---
+title: "Agentic Workflows and Multi-Agent Orchestration"
+description: "A deep dive into the reasoning cores, reAct loops, and topological patterns that define modern autonomous AI systems."
+category: "insights"
+tags: ["AI-agents", "LLMs", "orchestration", "system-design", "multi-agent-systems"]
+level: "advanced"
+readTime: "8 min"
+publishedAt: "2026-03-24"
+featured: true
+order: 1
+---
+
+# Agentic Workflows and Multi-Agent Orchestration
+
+This study explains two key ideas in modern AI design: agentic workflows and multi-agent orchestration.
+
+**Agentic workflows** are systems where an AI model doesn't just give one answer. Instead, it plans, uses tools, watches results, and adjusts to finish a task. Multi-agent orchestration builds on this by having several specialised agents work together. One agent, called the orchestrator, guides the others, known as subagents.
+
+---
+
+## Anatomy of an Agentic Workflow
+
+```mermaid
+flowchart LR
+  A(["Goal"]) --> B["Plan\nDecompose into steps"]
+  B --> C["Act\nCall tools / APIs / agents"]
+  C --> D["Observe\nRead results & errors"]
+  D -->|"loop until goal met"| B
+  D -->|"goal achieved"| E(["Done"])
+```
+
+The main part of every agentic system is the **reAct loop**. Here, the model decides what to do, takes action (like using a tool or checking a database), sees the result, and repeats. This is strong because the model can fix mistakes, change plans, and do many steps without human help.
+
+The core components of an agentic workflow are:
+
+```mermaid
+flowchart TD
+  A(["User goal / task"]) --> B["LLM — reasoning core\nPlans, decides, reflects"]
+  B --> C["Tool use\nAPIs, search, code exec"]
+  B --> D["Memory\nContext, vector store, state"]
+  B --> E["Environment\nFiles, browser, shell"]
+  C --> F["Observe → Think → Act → Observe\nRepeats until stopping condition reached"]
+  D --> F
+  E --> F
+  F -.->|"loop back"| B
+  F --> G(["Final output / action"])
+```
+
+Multi-agent orchestration adds another layer to this.
+
+---
+
+## Multi-Agent Orchestration
+
+Agentic workflows involve an AI model that doesn't just answer once. It plans, acts, uses tools, watches results, and repeats until it reaches a goal. The focus shifts from just answering questions to making decisions to reach a goal.
+
+### Agentic Workflow Loop
+
+The steps of **planning, acting, observing, and repeating** are central to any agent. Multi-agent systems become interesting when many of these loops run at the same time or in a hierarchy.
+
+**Multi-agent orchestration** means getting many agents to work together towards a common goal. Each agent has its own tools and context. The key decision is how these agents connect with each other.
+
+```mermaid
+flowchart TD
+  A(["User task"]) --> B["Orchestrator agent\nDecomposes task, routes to subagents"]
+
+  B --> C["Research agent\nWeb search, retrieval"]
+  B --> D["Coding agent\nWrite, execute, debug"]
+  B --> E["Critic agent\nValidate, score, flag"]
+  B --> F(["Final output"])
+
+  C --> G["Search, RAG"]
+  D --> H["Sandbox, REPL"]
+  E --> I["Eval metrics"]
+
+  G --> J["Shared context / message bus\nResults passed back to orchestrator"]
+  H --> J
+  I --> J
+
+  J -.->|"synthesize"| B
+  B -.-> F
+```
+
+### Main Ideas
+
+Common setups include:
+
+- **Orchestrator–worker** — one agent leads many specialists
+- **Pipeline** — agents work in a sequence, passing results to the next
+- **Peer-to-peer / debate** — agents review each other's work
+
+Most real systems mix these setups.
+
+### Key Design Concerns & Topology Patterns
+
+```mermaid
+flowchart TD
+  subgraph concerns["Key design concerns"]
+    direction TB
+    A["Context passing\nWhat each agent sees"]
+    B["Trust boundaries\nPermissions & sandboxing"]
+    C["Failure handling\nRetries & fallbacks"]
+    D["Observability\nTracing & logging"]
+    E["Shared state\nMemory & databases"]
+    F["Parallelism\nFan-out & fan-in"]
+  end
+
+  subgraph pipeline["Pipeline — sequential"]
+    direction TB
+    P1["Intake agent\nParses input"] --> P2["Analysis agent\nEnriches data"] --> P3["Output agent\nFormats result"]
+  end
+
+  subgraph ow["Orchestrator–worker"]
+    direction TB
+    O["Orchestrator\nPlans & delegates"]
+    O --> R["Researcher\nWeb search"]
+    O --> Co["Coder\nCode execution"]
+    O --> W["Writer\nDrafts output"]
+  end
+```
+
+### Challenges in Orchestration
+
+The challenge in orchestration is not the easy parts; it's everything else:
+
+- Context windows can fill up if tasks take too long.
+- Agents might get stuck in reasoning loops without knowing.
+- Tool outputs can be unclear.
+- If one agent fails, it can cause problems if there are no clear error agreements between agents.
+
+### Trust and Permissions
+
+Trust and permissions are important. An agent should only have the permissions it needs. For example, a research agent should not have access to write in the database. Each agent gets the trust set by the human operator, but not all agents need full trust.
+
+---
+
+## Practical Design Tips
+
+- Keep agent interfaces simple — each agent should have clear input and output rules, not just free-form text.
+- Include checkpoints for human review before irreversible actions (like deleting files or sending emails).
+- Use explicit state (writing to a shared store) instead of relying on a previous agent's output.
+- Log every tool call with its input and output — debugging is hard without traces.
+- Report errors clearly — an agent that hides errors is harder to fix than one that reports them.
+
+---
+
+## When to Use Multi-Agent vs Single-Agent
+
+| Scenario | Recommended Approach |
+|---|---|
+| Tasks with clear steps that fit the context window | Single agent |
+| Tasks that can be done in parallel (e.g., researching ten topics at once) | Multi-agent |
+| Tasks requiring specialization (e.g., a SQL expert vs. a generalist) | Multi-agent |
+| Long tasks where one agent's context would fill up | Multi-agent |
+
+### Why Use Multiple Agents?
+
+A single agent has limited focus. Breaking a big task into smaller parts (like research, coding, review) allows for specialization, parallel work, and more reliable results. The orchestrator's role is to break down the goal, assign tasks, gather results, and combine them.
+
+---
+
+## Key Orchestration Patterns
+
+```mermaid
+flowchart LR
+  subgraph seq["1. Sequential chain"]
+    direction TB
+    S1["Plan"] --> S2["Execute"] --> S3["Verify"] --> S4["Output"]
+  end
+
+  subgraph fanout["2. Parallel fan-out"]
+    direction TB
+    Orch["Orchestrator"]
+    Orch --> AgA["Agent A"]
+    Orch --> AgB["Agent B"]
+    Orch --> AgC["Agent C"]
+    AgA --> Syn["Synthesizer"]
+    AgB --> Syn
+    AgC --> Syn
+  end
+
+  subgraph reflect["3. Self-reflection loop"]
+    direction TB
+    Gen["Generate"] --> Crit["Critique"]
+    Crit --> Rev["Revise"]
+    Rev -.->|"iterate"| Gen
+  end
+
+  subgraph escalate["4. Escalation / handoff"]
+    direction TB
+    FA["Fast agent"] -->|"if uncertain"| SM["Stronger model"]
+    SM -->|"or human"| Rv["Review"]
+  end
+```
+
+There are four main patterns:
+
+### 1. Sequential Chain
+
+Each step's result is the next step's starting point. This works well for structured processes like research, drafting, editing, and publishing. It is easy to understand and fix.
+
+### 2. Parallel Fan-Out
+
+The main controller breaks a task into smaller tasks, runs them at the same time, and then combines the results. This is much faster than doing tasks one after another when they don't depend on each other.
+
+### 3. Self-Reflection Loop
+
+The same or a different model checks its own work and makes improvements. This is often used in coding and writing tasks and usually improves quality more than doing it once.
+
+### 4. Escalation / Handoff
+
+A simple and fast model handles easy tasks and gives harder tasks to a better model or a human. This is common in production systems to save money and time.
+
+---
+
+## Key Design Considerations
+
+- **Managing context** is the hardest part. You need to decide what information each part sees and shares without going over limits.
+- **Stopping conditions** are important. Loops can run forever if you don't clearly define when they should stop.
+- **Trust between agents** — in systems with multiple agents, an agent should not automatically trust instructions from another agent. There are risks of harmful instructions and results.
+- **Observability is crucial.** You should log every tool call, step, and handoff. Silent failures can quickly add up over many steps.
+
+---
