@@ -21,8 +21,9 @@ export default function Navbar() {
                         <Link href="/" className="hover:text-primary transition">Home</Link>
                         <Link href="/architecture" className="hover:text-primary transition">Architecture</Link>
                         <Link href="/ai-systems" className="hover:text-primary transition">AI Systems</Link>
-                        <Link href="/impact" className="hover:text-primary transition">AI Systems</Link>
-                        <Link href="/insights" className="hover:text-primary transition">AI Systems</Link>
+                        <Link href="/impact" className="hover:text-primary transition">Impact</Link>
+                        <Link href="/insights" className="hover:text-primary transition">Insights</Link>
+                        <Link href="/case-study" className="hover:text-primary transition">AI Showcase</Link>
                     </div>
 
                     {/* DESKTOP CTA - Hidden on mobile */}
@@ -90,6 +91,13 @@ export default function Navbar() {
                             className="text-sm font-medium text-muted hover:text-primary"
                         >
                             Insights
+                        </Link>
+                        <Link 
+                            href="/case-study" 
+                            onClick={() => setIsOpen(false)}
+                            className="text-sm font-medium text-muted hover:text-primary"
+                        >
+                            AI Showcase
                         </Link>
                         <Link
                             href={{ pathname: "/", hash: "contact" }}

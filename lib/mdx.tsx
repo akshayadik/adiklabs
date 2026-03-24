@@ -19,6 +19,8 @@ export interface Post {
   publishedAt: string;
   featured?: boolean;
   order?: number;
+  previewImage?: string;
+  previewUrl?: string;
   content: string;
 }
 
