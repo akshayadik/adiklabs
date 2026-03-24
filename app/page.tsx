@@ -36,10 +36,10 @@ export default function Home() {
               Explore Architecture
             </Link>
             <Link
-              href="/impact"
+              href="/insights"
               className="px-6 py-3 rounded-xl border border-gray-300 text-primary font-medium hover:bg-white transition"
             >
-              Explore Impact
+              Read Insights
             </Link>
           </div>
         </div>

@@ -19,6 +19,7 @@ export default function Navbar() {
                     <Link href="/architecture" className="hover:text-primary transition">Architecture</Link>
                     <Link href="/ai-systems" className="hover:text-primary transition">AI Systems</Link>
                     <Link href="/impact" className="hover:text-primary transition">Impact</Link>
+                    <Link href="/insights" className="hover:text-primary transition">Insights</Link>
                     {/* ... other links */}
                 </div>
 
