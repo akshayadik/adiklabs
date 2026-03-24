@@ -50,7 +50,7 @@ export default function Home() {
         title={
           <div className="flex justify-between items-end w-full">
             <span>AI Showcase</span>
-            <Link href="/ai-showcase" className="text-blue text-sm font-semibold hover:underline mb-1">
+            <Link href="/case-study" className="text-blue text-sm font-semibold hover:underline mb-1">
               View All Tools →
             </Link>
           </div>
