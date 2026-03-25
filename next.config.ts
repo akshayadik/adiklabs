@@ -18,6 +18,15 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/work-with-me',
+        destination: '/contact',
+        permanent: true,
+      },
+    ];
+  },
 }
 
 export default withMDX(nextConfig)

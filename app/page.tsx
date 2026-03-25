@@ -4,6 +4,7 @@ import Link from "next/link";
 import Footer from "./components/Footer";
 import Image from "next/image";
 import TrackedLink from "./components/TrackedLink";
+import HeroSlider from "./components/HeroSlider";
 
 export default function Home() {
   return (
@@ -14,37 +15,7 @@ export default function Home() {
           <div className="w-full h-[400px] bg-gradient-to-r from-violet/10 to-blue/10 blur-3xl opacity-50"></div>
         </div>
 
-        <div className="max-w-4xl mx-auto text-center px-6 py-32">
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-tight">
-            <span className="text-primary">Adik</span>
-            <span className="bg-gradient-to-r from-violet to-blue bg-clip-text text-transparent"> Labs</span>
-          </h1>
-
-          {/* Updated Tagline per Brand Kit */}
-          <p className="mt-4 text-xl font-medium text-muted uppercase tracking-widest">
-            Scalable AI & Cloud Systems
-          </p>
-
-          {/* Updated Core Message */}
-          <p className="mt-6 text-lg text-muted max-w-2xl mx-auto leading-relaxed">
-            Building scalable, intelligent systems using AI and cloud technologies.
-          </p>
-
-          <div className="mt-10 flex justify-center gap-4">
-            <Link
-              href="/architecture"
-              className="px-6 py-3 rounded-xl bg-blue text-white font-semibold shadow-md hover:bg-opacity-90 transition"
-            >
-              Explore Architecture
-            </Link>
-            <Link
-              href="/insights"
-              className="px-6 py-3 rounded-xl border border-gray-300 text-primary font-medium hover:bg-white transition"
-            >
-              Read Insights
-            </Link>
-          </div>
-        </div>
+        <HeroSlider />
       </section>
       {/* AI SHOWCASE PREVIEW */}
       <Section
