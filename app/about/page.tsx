@@ -21,7 +21,7 @@ export default function AboutPage() {
               I build systems that <span className="text-violet">outlast</span> the builder.
             </h1>
             <p className="text-xl text-muted leading-relaxed max-w-2xl">
-              I’m Akshay. I help founders and technical leaders move from "doing everything" 
+              I’m the systems architect behind AdikLabs. I help founders and technical leaders move from "doing everything" 
               to "owning a system" using AI, automation, and structured growth architecture.
             </p>
           </motion.div>
