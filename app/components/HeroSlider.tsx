@@ -11,7 +11,7 @@ const slides = [
         tagline: "System builder for founders who want scale, not chaos.",
         title: (
             <>
-                Hi, I’m <span className="text-violet">Founder behind AdikLabs</span>
+                <span className="text-violet">@ AdikLabs</span>
             </>
         ),
         subtitle: "I design scalable AI & system architectures that turn founders into operators of predictable, high-leverage businesses.",
