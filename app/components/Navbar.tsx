@@ -18,12 +18,13 @@ export default function Navbar() {
 
                     {/* DESKTOP NAV - Hidden on mobile, flex on medium+ screens */}
                     <div className="hidden md:flex items-center gap-8 text-sm font-medium text-muted">
-                        <Link href="/" className="hover:text-primary transition">Home</Link>
+                        <Link href="/" className="hover:text-primary transition">Home</Link>        
                         <Link href="/architecture" className="hover:text-primary transition">Architecture</Link>
                         <Link href="/ai-systems" className="hover:text-primary transition">AI Systems</Link>
                         <Link href="/impact" className="hover:text-primary transition">Impact</Link>
                         <Link href="/insights" className="hover:text-primary transition">Insights</Link>
                         <Link href="/case-study" className="hover:text-primary transition">AI Showcase</Link>
+                        <Link href="/about" className="hover:text-primary transition">About Us</Link>
                     </div>
 
                     {/* DESKTOP CTA - Hidden on mobile */}
