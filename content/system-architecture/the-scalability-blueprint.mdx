@@ -71,14 +71,20 @@ sequenceDiagram
 ```
 * **Write-Through:** Data is written to the cache and the DB simultaneously. Your cache is always up to date, but writes are slightly slower because you’re hitting two places at once.
 ```mermaid
-sequenceDiagram
-    participant App
-    participant Cache
-    participant DB
-    App->>Cache: 1. Write Data
-    Cache->>DB: 2. Synchronous Write
-    DB-->>Cache: 3. Ack
-    Cache-->>App: 4. Success
+flowchart TD
+    A[📱 App] -->|1. Write| B(⚡ Cache)
+    B -->|2. Sync| C[🗄️ DB]
+    C -->|3. Ack| B
+    B -->|4. OK| A
+
+    linkStyle default color:#555,stroke-width:2px;
+    Cache -- "2. Sync Write" --> DB[(🗄️ Database)]
+    DB -. "3. Ack" .-> Cache
+    Cache -. "4. Success" .-> App
+
+    style App fill:#f9f9f9,stroke:#333
+    style Cache fill:#e1f5fe,stroke:#01579b
+    style DB fill:#fff9c4,stroke:#fbc02d
 ```
 * **Write-Back:** Data is written to the cache only, and the DB is updated after a delay. This makes writes lightning-fast, but if the cache crashes before the DB syncs, you lose data. **Use this for high-write loads where 100% durability isn't the primary concern (like like-counts or real-time metrics).**
 

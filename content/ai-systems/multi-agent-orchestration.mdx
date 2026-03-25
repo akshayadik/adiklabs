@@ -94,29 +94,25 @@ Most real systems mix these setups.
 ### Key Design Concerns & Topology Patterns
 
 ```mermaid
-flowchart TD
-  subgraph concerns["Key design concerns"]
-    direction TB
-    A["Context passing\nWhat each agent sees"]
-    B["Trust boundaries\nPermissions & sandboxing"]
-    C["Failure handling\nRetries & fallbacks"]
-    D["Observability\nTracing & logging"]
-    E["Shared state\nMemory & databases"]
-    F["Parallelism\nFan-out & fan-in"]
-  end
+flowchart LR
+    subgraph A [⚡ Core Concerns]
+        direction TB
+        A1[🧠 Context]
+        A2[🛡️ Trust]
+        A3[📉 Failures]
+    end
 
-  subgraph pipeline["Pipeline — sequential"]
-    direction TB
-    P1["Intake agent\nParses input"] --> P2["Analysis agent\nEnriches data"] --> P3["Output agent\nFormats result"]
-  end
+    subgraph B [🔗 Sequential]
+        direction LR
+        B1[📥 Intake] --> B2[📊 Analysis] --> B3[📤 Output]
+    end
 
-  subgraph ow["Orchestrator–worker"]
-    direction TB
-    O["Orchestrator\nPlans & delegates"]
-    O --> R["Researcher\nWeb search"]
-    O --> Co["Coder\nCode execution"]
-    O --> W["Writer\nDrafts output"]
-  end
+    subgraph C [🤖 Orchestration]
+        direction TB
+        C1[👑 Orchestrator]
+        C1 --> C2[🔍 Search]
+        C1 --> C3[💻 Code]
+    end
 ```
 
 ### Challenges in Orchestration

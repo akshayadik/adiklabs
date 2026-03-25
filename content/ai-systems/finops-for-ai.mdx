@@ -1,0 +1,235 @@
+---
+title: "The AI FinOps Framework: From Bill Shock to Flywheel"
+description: "Master the 4-stage maturity model of AI cost management and implement the 7 high-impact tactics to reduce LLM overhead."
+category: "ai-systems"
+tags: ["finops", "strategy", "ai-transformation", "governance", "kpis"]
+level: "advanced"
+readTime: "6 min"
+publishedAt: "2026-03-25"
+featured: true
+order: 2
+---
+
+# FinOps for AI: Architecting for Cost-Efficiency
+
+This interactive FinOps for AI framework helps you understand and save money on AI.
+
+---
+
+## Framework Overview
+
+The framework has four main parts: **visibility**, **model selection**, **inference optimization**, and **governance**. It maps each action from designing applications to monitoring them.
+
+```mermaid
+flowchart TD
+    A[🧠 AI Application] --> B[Visibility Layer]
+    A --> C[Model Selection]
+    A --> D[Inference Optimization]
+    A --> E[Governance]
+
+    B --> B1[Token Usage Tracking]
+    B --> B2[Cost Attribution]
+    B --> B3[Real-time Dashboards]
+
+    C --> C1[Model Routing]
+    C --> C2[Capability Matching]
+    C --> C3[Cost-Quality Tradeoff]
+
+    D --> D1[Prompt Caching]
+    D --> D2[Batching]
+    D --> D3[Output Compression]
+
+    E --> E1[Budget Alerts]
+    E --> E2[Team Accountability]
+    E --> E3[Policy Enforcement]
+
+    B1 & B2 & B3 --> F[Design Phase]
+    C1 & C2 & C3 --> G[Build Phase]
+    D1 & D2 & D3 --> H[Deploy Phase]
+    E1 & E2 & E3 --> I[Monitor Phase]
+
+    style A fill:#4F46E5,color:#fff
+    style F fill:#0EA5E9,color:#fff
+    style G fill:#10B981,color:#fff
+    style H fill:#F59E0B,color:#fff
+    style I fill:#EF4444,color:#fff
+```
+
+---
+
+## Cost Drivers
+
+Where do AI costs come from? The main culprits are token volume and unnecessary API calls. A key insight: **output tokens are 3–5× more expensive than input tokens**.
+
+```mermaid
+graph LR
+    subgraph Inputs["📥 Input Costs (1x)"]
+        I1[System Prompts]
+        I2[User Messages]
+        I3[Retrieved Context / RAG]
+        I4[Conversation History]
+    end
+
+    subgraph Outputs["📤 Output Costs (3–5x)"]
+        O1[Generated Responses]
+        O2[Chain-of-Thought Tokens]
+        O3[Redundant Repetition]
+        O4[Verbose Formatting]
+    end
+
+    subgraph Waste["🚨 Avoidable Costs"]
+        W1[Duplicate Requests]
+        W2[No Caching Strategy]
+        W3[Oversized Models for Simple Tasks]
+        W4[Unnecessary Re-indexing]
+    end
+
+    Inputs -->|multiplied by| Cost[💸 Total Cost]
+    Outputs -->|multiplied by| Cost
+    Waste -->|adds to| Cost
+
+    style Cost fill:#EF4444,color:#fff
+    style Outputs fill:#F97316,color:#fff
+    style Waste fill:#DC2626,color:#fff
+```
+
+---
+
+## Tactics — 7 Ways to Save (Ranked by Impact)
+
+Seven cost-saving tactics ranked by potential savings:
+
+```mermaid
+flowchart TD
+    T1["🏆 #1 Model Routing<br/>💰 Save 40–60%<br/>Route easy queries to smaller models"]
+    T2["🥈 #2 Prompt Caching<br/>💰 Save 30–50%<br/>Cache repeated prompts and context"]
+    T3["🥉 #3 Output Reduction<br/>💰 Save 20–40%<br/>Concise prompts, remove verbose text"]
+    T4["4️⃣ Batch Processing<br/>💰 Save 25–50%<br/>Group non-urgent async requests"]
+    T5["5️⃣ Context Pruning<br/>💰 Save 15–30%<br/>Trim conversation history aggressively"]
+    T6["6️⃣ Embedding Deduplication<br/>💰 Save 10–20%<br/>Avoid re-embedding identical chunks"]
+    T7["7️⃣ Speculative Decoding<br/>💰 Save 10–15%<br/>Draft with small model, verify with large"]
+
+    T1 --> T2 --> T3 --> T4 --> T5 --> T6 --> T7
+
+    style T1 fill:#4F46E5,color:#fff
+    style T2 fill:#7C3AED,color:#fff
+    style T3 fill:#9333EA,color:#fff
+    style T4 fill:#0EA5E9,color:#fff
+    style T5 fill:#10B981,color:#fff
+    style T6 fill:#F59E0B,color:#fff
+    style T7 fill:#6B7280,color:#fff
+```
+
+> 💡 **Recommended starting point:** Model routing. A simple classifier to send easy queries to a smaller model delivers a fast ROI with minimal quality risk.
+
+---
+
+## Governance
+
+A solid AI FinOps governance model rests on three pillars: **visibility**, **accountability**, and **optimization**.
+
+```mermaid
+graph TD
+    subgraph KPIs["📊 Key Performance Indicators"]
+        K1[Cost per Query]
+        K2[Cache Hit Rate]
+        K3[Routing Efficiency]
+        K4[Token Output Ratio]
+    end
+
+    subgraph Pillars["🏛️ Governance Pillars"]
+        P1[Visibility\nWhat are we spending?]
+        P2[Accountability\nWho is spending it?]
+        P3[Optimization\nHow do we reduce it?]
+    end
+
+    subgraph Controls["🔒 Control Mechanisms"]
+        C1[Budget Alerts & Hard Caps]
+        C2[Team-level Tagging & Chargeback]
+        C3[Quarterly Optimization Reviews]
+        C4[Model Access Policies]
+    end
+
+    P1 --> K1 & K2
+    P2 --> K3 & K4
+    P3 --> Controls
+
+    K1 & K2 & K3 & K4 --> OKR[Governance OKRs]
+
+    style OKR fill:#4F46E5,color:#fff
+    style P1 fill:#0EA5E9,color:#fff
+    style P2 fill:#10B981,color:#fff
+    style P3 fill:#F59E0B,color:#fff
+```
+
+### Key KPIs Every Team Should Track
+
+| KPI | Description | Target |
+|-----|-------------|--------|
+| **Cost per Query** | Total spend ÷ number of LLM calls | Trending down |
+| **Cache Hit Rate** | % of requests served from cache | > 40% |
+| **Routing Efficiency** | % of queries correctly routed to cheaper models | > 60% |
+| **Token Output Ratio** | Output tokens ÷ input tokens | < 1.5 |
+
+---
+
+## Maturity Model
+
+Four stages of FinOps for AI maturity — from reactive to proactive:
+
+```mermaid
+journey
+    title FinOps for AI Maturity Journey
+    section 🐛 Crawl
+      Surprised by bills: 1: Team
+      No cost visibility: 1: Team
+      Single model for everything: 2: Team
+    section 🚶 Walk
+      Basic token tracking: 5: Team
+      Manual budget reviews: 4: Team
+      Some caching in place: 5: Team
+    section 🏃 Run
+      Real-time cost dashboards: 8: Team
+      Model routing implemented: 8: Team
+      Team-level chargeback: 7: Team
+    section 🚀 Fly
+      ML-based cost forecasting: 10: Team
+      Full chargeback automation: 10: Team
+      Continuous optimization loops: 10: Team
+```
+
+| Stage | Name | Key Characteristics |
+|-------|------|---------------------|
+| 1 | **Crawl** | Bill shock, no visibility, single model for all tasks |
+| 2 | **Walk** | Basic tracking, manual reviews, early caching |
+| 3 | **Run** | Dashboards, model routing, team-level accountability |
+| 4 | **Fly** | ML forecasting, full chargeback, automated optimization |
+
+---
+
+## Savings Calculator
+
+Use this formula to estimate your projected annual savings:
+
+```
+Annual Savings =
+  (Monthly Spend × Cache Hit Rate × 0.85)
+  + (Monthly Spend × Routing Coverage × 0.50)
+  + (Monthly Spend × Batchable Workload × 0.40)
+  + (Monthly Spend × Output Reduction Target × 0.30)
+  × 12
+```
+
+**Example inputs:**
+
+| Parameter | Example Value |
+|-----------|---------------|
+| Monthly AI Spend | $10,000 |
+| Cache Hit Rate | 35% |
+| Routing Coverage | 55% |
+| Batchable Workload | 20% |
+| Output Reduction Target | 15% |
+
+> **💡 Best ROI:** Start with model routing — use a simple classifier to send easy queries to a smaller, cheaper model first. Low risk, fast payback.
+
+---

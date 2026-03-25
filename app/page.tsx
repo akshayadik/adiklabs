@@ -104,6 +104,37 @@ export default function Home() {
         </div>
       </Section>
 
+      {/* AI SYSTEMS PREVIEW */}
+      <Section
+        title={
+          <div className="flex justify-between items-end w-full">
+            <span>AI Systems</span>
+            <Link href="/ai-systems" className="text-blue text-sm font-semibold hover:underline mb-1">
+              View All AI Systems →
+            </Link>
+          </div>
+        }
+      >
+        <div className="grid md:grid-cols-3 gap-6">
+          <Card
+            title="Agentic Workflows and Multi-Agent Orchestration"
+            description="A deep dive into the reasoning cores, reAct loops, and topological patterns that define modern autonomous AI systems."
+            href="/content/ai-systems/multi-agent-orchestration"
+          />
+          <Card
+            title="The AI FinOps Framework: From Bill Shock to Flywheel"
+            description="Master the 4-stage maturity model of AI cost management and implement the 7 high-impact tactics to reduce LLM overhead."
+            href="/content/ai-systems/finops-for-ai"
+          />
+          <Card
+            title="The Evolution of RAG: Why Data Mesh is the Missing Link"
+            description="An exploration of how domain ownership and data-as-a-product principles transform RAG from a fragile pipeline into a production-grade API."
+            href="/content/ai-systems/evolution-of-rag"
+          />
+          {/* ... other preview cards */}
+        </div>
+      </Section>
+
       {/* IMPACT */}
       <Section
         title={
@@ -161,27 +192,6 @@ export default function Home() {
             title="Rate Limiter"
             description="Token bucket, sliding window, distributed control."
             href="/content/system-architecture/rate-limiter"
-          />
-          {/* ... other preview cards */}
-        </div>
-      </Section>
-
-      {/* AI SYSTEMS PREVIEW */}
-      <Section
-        title={
-          <div className="flex justify-between items-end w-full">
-            <span>AI Systems</span>
-            <Link href="/ai-systems" className="text-blue text-sm font-semibold hover:underline mb-1">
-              View All AI Systems →
-            </Link>
-          </div>
-        }
-      >
-        <div className="grid md:grid-cols-3 gap-6">
-          <Card
-            title="Agentic Workflows and Multi-Agent Orchestration"
-            description="A deep dive into the reasoning cores, reAct loops, and topological patterns that define modern autonomous AI systems."
-            href="/content/ai-systems/multi-agent-orchestration"
           />
           {/* ... other preview cards */}
         </div>
