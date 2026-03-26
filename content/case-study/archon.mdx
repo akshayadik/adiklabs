@@ -1,0 +1,66 @@
+---
+title: "Archon: AI Code Reviewer"
+description: "A stateless, context-aware auditor leveraging Gemini 1.5 Pro to detect architectural violations, O(n²) performance bottlenecks, and security flaws in distributed systems."
+category: "case-study"
+level: "advanced"
+readTime: "8 min"
+publishedAt: "2026-03-26"
+featured: true
+order: 1
+previewImage: "/archon.png"
+previewUrl: "https://archon-beige.vercel.app/"
+tags: ["Next.js", "FastAPI", "Gemini-1.5-Pro", "Architecture", "Stateless-RAG"]
+---
+
+
+# Beyond the Linter: Building a Context-Aware AI Architecture Reviewer
+
+Most AI code review tools today suffer from a "tunnel vision" problem. They look at a single pull request diff in isolation, nitpicking variable names or formatting while completely missing the forest for the trees.
+
+I decided to build something different: an **AI Architecture Reviewer** that understands the "map" of your codebase.
+
+
+
+## The Problem: AI with Tunnel Vision
+Standard LLM-based code reviewers often function like high-powered linters. They are great at finding a missing null check, but they have no idea if your new `OrderController` is illegally bypassing the `OrderService` to query the database directly. 
+
+To catch **architectural violations**, an AI needs context. It needs to know what the rest of the project looks like.
+
+## The Solution: A Hybrid Context Engine
+My tool uses a stateless, hybrid approach to review code. It doesn't just send a diff to an LLM; it builds a temporary "Context Layer" on the fly.
+
+### 1. Context-Awareness (The USP)
+Before the AI begins its review, the backend fetches the entire repository file tree. By feeding this structure into **Gemini 1.5 Pro’s** massive context window, the AI gains a "birds-eye view" of the project. It understands:
+* **The Architecture Style:** Is it a monolith or microservices?
+* **Layer Boundaries:** Does the project follow a Clean Architecture or Hexagonal pattern?
+* **Framework Idioms:** Is it using Spring Boot, Next.js, or FastAPI correctly?
+
+
+
+### 2. The Performance Audit (Big O & Beyond)
+We didn't stop at architecture. The tool is programmed with a specialized performance heuristics checklist. It looks for:
+* **N+1 Queries:** Detecting loops that hide database calls.
+* **Complexity Analysis:** Identifying $O(n^2)$ or higher complexities and explaining the impact using **Big O notation**.
+* **Memory Pressure:** Finding large object allocations without pagination.
+
+## Technical Deep Dive
+I built this using a modern, high-performance stack designed for speed and privacy.
+
+* **Backend:** **FastAPI (Python)**. Chosen for its native asynchronous support and strict type-safety with Pydantic.
+* **Frontend:** **Next.js 14**. A sleek dashboard that renders real-time suggestions with custom diff viewers.
+* **AI Engine:** **Gemini 1.5 Pro**. Utilized for its 2-million token context window, allowing us to pass entire repository maps without losing "focus."
+* **Privacy-First:** The tool is **Stateless**. It uses a "Bring Your Own Token" (BYOT) model. No code is stored, no tokens are saved, and the memory is wiped the moment the analysis is complete.
+
+## Explainability: Building Trust with Developers
+A tool is only as good as its suggestions. I designed the UI to focus on **Explainability**. Every issue found by the AI is broken down into four parts:
+1.  **The Problem:** Why exactly is this code problematic?
+2.  **The Fix:** A clear, actionable suggestion.
+3.  **The Diff:** A visual before-and-after representation.
+4.  **The Trade-offs:** An honest look at the architectural cost of the change.
+
+
+
+## Lessons Learned
+Building this taught me that the "Context Window" is the most undervalued asset in AI development. By moving away from "RAG" (Retrieval-Augmented Generation) and toward **"Long-Context In-Memory Injection,"** we can achieve architectural insights that were previously impossible for machines to catch.
+
+---

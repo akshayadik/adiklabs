@@ -5,6 +5,7 @@ import Footer from "./components/Footer";
 import Image from "next/image";
 import TrackedLink from "./components/TrackedLink";
 import HeroSlider from "./components/HeroSlider";
+import AIShowcaseSlider from "./components/AIShowcaseSlider";
 
 export default function Home() {
   return (
@@ -28,51 +29,7 @@ export default function Home() {
           </div>
         }
       >
-        <div className="grid md:grid-cols-1 gap-6">
-          <div className="relative p-8 rounded-2xl border-2 border-blue/20 bg-gradient-to-br from-white to-blue/5 overflow-hidden group">
-            <div className="flex flex-col md:flex-row gap-8 items-center">
-              <div className="flex-1">
-                <span className="px-3 py-1 rounded-full bg-violet/10 text-violet text-xs font-bold uppercase tracking-wider">
-                  Featured Tool
-                </span>
-                <h3 className="text-3xl font-bold text-primary mt-4 mb-3">
-                  AI Architecture Reviewer
-                </h3>
-                <p className="text-lg text-muted mb-6">
-                  Upload your system diagrams or descriptions and get instant AI-driven feedback on scalability bottlenecks, single points of failure, and cost optimization.
-                </p>
-                <div className="flex gap-4">
-                  {/* 2. Swap <Link> for <TrackedLink> and add the event props */}
-                  <TrackedLink
-                    href="/case-study"
-                    eventName="click_live_demo"
-                    eventCategory="homepage_showcase"
-                    className="inline-flex items-center px-6 py-3 rounded-xl bg-blue text-white font-semibold hover:bg-opacity-90 transition-all shadow-md hover:shadow-lg"
-                  >
-                    Try Live Demo <span className="ml-2">→</span>
-                  </TrackedLink>
-                </div>
-              </div>
-              {/* Direct Image Integration */}
-              <div className="w-full md:w-1/2 flex justify-center">
-                {/* Wrapper div adds subtle styling and shadow to make the image pop */}
-                <div className="relative w-full max-w-[500px] rounded-xl overflow-hidden shadow-2xl border border-gray-800/20 group-hover:-translate-y-1 transition-transform duration-300">
-                  <Image
-                    src="/ai-reviewer-terminal.png"
-                    alt="AdikLabs AI Architecture Reviewer Output"
-                    width={600}
-                    height={400}
-                    className="w-full h-auto object-contain"
-                    priority
-                  />
-                  {/* Subtle overlay effect matching the brand */}
-                  <div className="absolute inset-0 bg-blue/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </div>
+        <AIShowcaseSlider />
       </Section>
 
       {/* AI SYSTEMS PREVIEW */}

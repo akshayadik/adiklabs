@@ -2,6 +2,31 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { Layers, BrainCircuit, Activity, HardHat, ArrowLeft } from "lucide-react";
+import Link from "next/link";
+
+const services = [
+  {
+    title: "System Design",
+    description: "Architecting scalable, distributed systems with a focus on high availability and event-driven patterns.",
+    icon: <Layers className="w-6 h-6 text-blue" />,
+  },
+  {
+    title: "AI Systems",
+    description: "Designing agentic workflows, multi-agent orchestration, and high-context RAG pipelines.",
+    icon: <BrainCircuit className="w-6 h-6 text-purple-500" />,
+  },
+  {
+    title: "Observability / Reliability",
+    description: "Implementing deep tracing, monitoring, and automated guardrails for system health.",
+    icon: <Activity className="w-6 h-6 text-green-500" />,
+  },
+  {
+    title: "Real-world Ops",
+    description: "Hands-on experience in CI/CD automation, cloud infrastructure, and incident response.",
+    icon: <HardHat className="w-6 h-6 text-orange-500" />,
+  },
+];
 
 export default function ContactPage() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -33,22 +58,51 @@ export default function ContactPage() {
   }
 
   return (
-    <main className="min-h-screen bg-bg pt-32 pb-20 px-6">
-      <div className="max-w-3xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
-        >
-          <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4">Work With Me</h1>
-          <p className="text-lg text-muted">Let's build scalable systems and digital authority together.</p>
+    <main className="min-h-screen bg-bg pt-20 pb-20 px-6">
+      <div className="max-w-5xl mx-auto">
+        
+        {/* Back Link */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-8">
+            <Link href="/" className="inline-flex items-center text-sm font-bold text-muted hover:text-blue transition-colors">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back
+            </Link>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="bg-white p-8 md:p-12 rounded-3xl border border-gray-100 shadow-xl"
+          className="text-center mb-16"
+        >
+          <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4">Work With Me</h1>
+          <p className="text-lg text-muted max-w-2xl mx-auto">
+            From architectural audits to building full-scale AI systems, I help teams build resilient digital authority.
+          </p>
+        </motion.div>
+
+        {/* --- SERVICE OFFERINGS GRID --- */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
+          {services.map((service, index) => (
+            <motion.div
+              key={service.title}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
+            >
+              <div className="mb-4">{service.icon}</div>
+              <h3 className="text-lg font-bold text-primary mb-2">{service.title}</h3>
+              <p className="text-sm text-muted leading-relaxed">{service.description}</p>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* --- CONTACT FORM --- */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="max-w-3xl mx-auto bg-white p-8 md:p-12 rounded-3xl border border-gray-100 shadow-xl"
         >
           {status === "success" ? (
             <div className="text-center py-10">
@@ -91,11 +145,12 @@ export default function ContactPage() {
                 <label className="block text-sm font-bold text-primary mb-2">I'm interested in...</label>
                 <select
                   name="interest"
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue/20 outline-none transition bg-white"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue/20 outline-none transition bg-white cursor-pointer"
                 >
                   <option value="AI Architecture">AI Architecture Review</option>
                   <option value="Scalable Systems">Scalable Systems Design</option>
-                  <option value="Digital Authority">Personal Branding/Authority</option>
+                  <option value="Observability">Observability & Reliability</option>
+                  <option value="Real-world Ops">Real-world Ops Consulting</option>
                   <option value="General Inquiry">General Inquiry</option>
                 </select>
               </div>
@@ -120,8 +175,8 @@ export default function ContactPage() {
               </button>
 
               {status === "error" && (
-                <p className="text-red-500 text-center text-sm">
-                  Something went wrong. Please try again or email me directly.
+                <p className="text-red-500 text-center text-sm font-medium">
+                  Something went wrong. Please try again.
                 </p>
               )}
             </form>

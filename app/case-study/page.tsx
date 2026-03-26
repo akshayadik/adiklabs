@@ -2,8 +2,10 @@
 import Section from "../components/Section";
 import Card from "../components/Card";
 import Footer from "../components/Footer";
+import { getPostsByCategory } from "@/lib/post";
 
 export default function AIShowcase() {
+  const posts = getPostsByCategory('case-study')
   return (
     <main>
       <Section title="AI Showcase">
@@ -13,13 +15,15 @@ export default function AIShowcase() {
         </p>
 
         <div className="grid md:grid-cols-2 gap-8">
-          <Card
-            title="AI Architecture Reviewer"
-            description="Automated audit tool for distributed systems. Checks for CAP theorem trade-offs and consistency patterns."
-            href="/content/case-study/ai-architecture-review"
-            previewUrl="https://ai-architecture-reviewer2.vercel.app/" // <-- Add your preview URL here
-          />
-          {/* Future tools go here */}
+          {posts.map((post) => (
+                    <Card
+                      key={post.slug}
+                      title={post.title}
+                      description={post.description}
+                      href={`/content/${post.category}/${post.slug}`}
+                      previewUrl={post.previewUrl} // <-- Add your preview URL here
+                    />
+                  ))}
         </div>
       </Section>
       <Footer />

@@ -30,7 +30,7 @@ export default function Navbar() {
                     {/* DESKTOP CTA - Hidden on mobile */}
                     <div className="hidden md:block">
                         <Link
-                            href={{ pathname: "/", hash: "contact" }}
+                            href="/contact"
                             className="px-5 py-2.5 rounded-lg bg-blue text-white text-sm font-semibold hover:opacity-90 transition shadow-sm"
                         >
                             Contact
