@@ -59,6 +59,11 @@ export default function Home() {
             description="An exploration of how domain ownership and data-as-a-product principles transform RAG from a fragile pipeline into a production-grade API."
             href="/content/ai-systems/evolution-of-rag"
           />
+          <Card
+            title="Text Feature Engineering: From Raw Reviews to Machine Learning"
+            description="A comprehensive guide to scraping Amazon reviews and transforming raw text into numerical features using One-Hot Encoding, Bag of Words, and TF-IDF to build a sentiment classifier."
+            href="/content/ai-systems/text-feature-engineering"
+          />
           {/* ... other preview cards */}
         </div>
       </Section>

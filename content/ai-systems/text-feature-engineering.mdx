@@ -1,0 +1,489 @@
+---
+title: "Text Feature Engineering: From Raw Reviews to Machine Learning"
+description: "A comprehensive guide to scraping Amazon reviews and transforming raw text into numerical features using One-Hot Encoding, Bag of Words, and TF-IDF to build a sentiment classifier."
+category: "ai-systems"
+tags: ["text-feature-engineering", "sentiment-analysis", "preprocessing", "scikit-learn", "nltk", "web-scraping", "tf-idf", "bag-of-words", "one-hot-encoding", "logistic-regression", "naive-bayes", "data-science"]
+level: "beginner-to-intermediate"
+readTime: "9 min"
+publishedAt: "2026-04-15"
+featured: true
+order: 4
+---
+
+# Text Feature Engineering: From Raw Reviews to Machine Learning
+
+---
+
+## Introduction
+
+Every time you type a review on Amazon, your words travel through a hidden pipeline before a machine learning model can make sense of them. That pipeline is called **Text Feature Engineering** — the art and science of converting raw human language into numbers that algorithms can understand.
+
+In this post, we'll walk through a real-world project that scrapes Amazon product reviews, cleans them, and transforms them into numerical features using three popular techniques:
+
+- **One-Hot Encoding (OHE)**
+- **Bag of Words (BoW)**
+- **TF-IDF (Term Frequency–Inverse Document Frequency)**
+
+We'll then use those features to build a **sentiment classifier** and compare which approach gives the best accuracy.
+
+---
+
+## The Big Picture: Architecture Overview
+
+Before diving into code, here's how all the pieces fit together:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                  TEXT FEATURE ENGINEERING PIPELINE          │
+│                                                             │
+│  1. DATA COLLECTION                                         │
+│     Amazon product URLs ──► Web Scraper ──► Raw Reviews     │
+│                                                             │
+│  2. TEXT PREPROCESSING                                      │
+│     Raw Text ──► Lowercase ──► Remove Punctuation           │
+│             ──► Tokenize ──► Remove Stopwords ──► Lemmatize │
+│             ──► Clean Text                                  │
+│                                                             │
+│  3. FEATURE ENGINEERING                                     │
+│     Clean Text ──┬──► One-Hot Encoding   (0/1 presence)     │
+│                  ├──► Bag of Words       (word counts)      │
+│                  └──► TF-IDF             (weighted scores)  │
+│                                                             │
+│  4. CLASSIFICATION                                          │
+│     Features ──► Logistic Regression / Naive Bayes ──► Sentiment │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Step 1: Collecting Real-World Data
+
+The dataset comes from Amazon product listings — TVs, mobiles, and earbuds across Amazon.com and Amazon.in. A custom Python scraper downloads HTML pages and extracts star ratings, review titles, and review text.
+
+```python
+import requests
+from bs4 import BeautifulSoup as bs
+
+def scrape(url):
+    headers = {
+        'user-agent': 'Mozilla/5.0 ...',
+        'accept': 'text/html,...',
+    }
+    r = requests.get(url, headers=headers)
+    if r.status_code > 500:
+        return None
+    return r.text
+
+# URLs to scrape
+urls = [
+    "https://www.amazon.com/s?k=tv",
+    "https://www.amazon.in/s?k=mobile",
+    "https://www.amazon.in/s?k=earbuds+buds",
+    "https://www.amazon.in/s?k=earbuds+samsung"
+]
+```
+
+The scraper collects links to product pages, then visits each one to extract customer reviews. In total, **549 reviews** were saved to a CSV file with columns for star rating, review title, and review text.
+
+> **Why Amazon?** Amazon-style reviews are ideal for NLP because they contain both structured data (star ratings) and unstructured text (opinions), making them perfect for sentiment analysis.
+
+---
+
+## Step 2: Text Preprocessing
+
+Raw text is messy. It contains capital letters, punctuation, filler words like "the" and "is", and different forms of the same word (e.g., "running" vs "run"). Preprocessing cleans all of this up.
+
+### The Preprocessing Pipeline
+
+```
+"This phone's BATTERY is RUNNING low!!"
+        │
+        ▼  Step 1: Lowercase
+"this phone's battery is running low!!"
+        │
+        ▼  Step 2: Remove punctuation
+"this phones battery is running low"
+        │
+        ▼  Step 3: Tokenize (split into words)
+["this", "phones", "battery", "is", "running", "low"]
+        │
+        ▼  Step 4: Remove stopwords ("this", "is")
+["phones", "battery", "running", "low"]
+        │
+        ▼  Step 5: Lemmatize (reduce to base form)
+["phone", "battery", "run", "low"]
+        │
+        ▼  Step 6: Re-join
+"phone battery run low"
+```
+
+### Python Code
+
+```python
+import re
+import nltk
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import word_tokenize
+
+lemmatizer = WordNetLemmatizer()
+stop_words = set(stopwords.words('english'))
+
+def preprocess(text: str) -> str:
+    # Step 1: Lowercase
+    text = text.lower()
+
+    # Step 2: Remove punctuation (keep only a-z and spaces)
+    text = re.sub(r'[^a-z\s]', '', text)
+
+    # Step 3: Tokenize
+    tokens = word_tokenize(text)
+
+    # Step 4: Remove stopwords
+    tokens = [t for t in tokens if t not in stop_words]
+
+    # Step 5: Lemmatize
+    tokens = [lemmatizer.lemmatize(t) for t in tokens]
+
+    # Step 6: Re-join
+    return ' '.join(tokens)
+
+# Apply to all reviews
+df['clean_text'] = df['review_text'].apply(preprocess)
+```
+
+### Before vs. After
+
+**BEFORE:**
+> "This stand is very well built and engineered. I am seriously not kidding. I got things to do, but when a product is made and designed very well..."
+
+**AFTER:**
+> "stand well built engineered seriously kidding got thing product made designed well believe choice chose right thing let others know..."
+
+The cleaned version has **no filler words, no punctuation** — just the meaningful content.
+
+---
+
+## Step 3: Vocabulary Creation
+
+Before we can build feature vectors, we need to know **all unique words** across the entire dataset. This is the vocabulary.
+
+```python
+from collections import Counter
+
+# Collect all tokens from all documents
+all_tokens = [token
+              for doc in df['clean_text']
+              for token in doc.split()]
+
+word_freq = Counter(all_tokens)
+vocabulary = set(word_freq.keys())
+
+print(f"Total tokens (with repeats): {len(all_tokens):,}")   # 23,271
+print(f"Unique vocabulary size     : {len(vocabulary):,}")   # 4,112
+```
+
+### Top 20 Most Frequent Words
+
+| Word | Frequency |
+|------|-----------|
+| good | 448 |
+| quality | 348 |
+| sound | 316 |
+| battery | 263 |
+| phone | 253 |
+| product | 189 |
+| earbuds | 185 |
+| also | 168 |
+| bud | 157 |
+| great | 154 |
+
+These high-frequency words tell us a lot about what reviewers care about — sound, battery life, and overall quality.
+
+---
+
+## Step 4: The Three Feature Engineering Methods
+
+Now comes the core of the project: converting text into numbers. We compare three approaches.
+
+### Method A: One-Hot Encoding (OHE)
+
+One-Hot Encoding simply records **which words are present** in a document — ignoring how many times they appear.
+
+**How it works:**
+
+```
+Vocabulary: [battery, camera, good, sound]
+
+Review 1: "good sound quality"
+  → [0=battery, 0=camera, 1=good, 1=sound]
+
+Review 2: "great battery life good camera"  
+  → [1=battery, 1=camera, 1=good, 0=sound]
+```
+
+Each row is a document. Each column is a word. The value is **1 if present, 0 if absent**.
+
+```python
+import numpy as np
+import pandas as pd
+
+# Work with first 10 documents for illustration
+sample_docs = df['clean_text'].head(10).tolist()
+
+# Build local vocabulary from these 10 docs
+local_vocab = sorted(set(w for doc in sample_docs for w in doc.split()))
+
+# Encode each document
+ohe_matrix = []
+for doc in sample_docs:
+    doc_words = set(doc.split())
+    vector = [1 if word in doc_words else 0 for word in local_vocab]
+    ohe_matrix.append(vector)
+
+ohe_array = np.array(ohe_matrix)
+ohe_df = pd.DataFrame(ohe_array, columns=local_vocab)
+```
+
+**OHE Matrix Shape:** (10 documents × 277 unique words)
+
+**Limitation:** It ignores frequency. A review that says "great great great phone" looks identical to one that says "great phone" for the word "great".
+
+---
+
+### Method B: Bag of Words (BoW)
+
+Bag of Words records **how many times each word appears** in a document. It's like OHE but with actual counts instead of 0/1.
+
+```python
+from sklearn.feature_extraction.text import CountVectorizer
+
+# Use top 500 most frequent words
+bow_vectorizer = CountVectorizer(max_features=500)
+bow_matrix = bow_vectorizer.fit_transform(df['clean_text'])
+
+# Shape: (549 documents × 500 words)
+print(f"BoW Matrix shape: {bow_matrix.shape}")
+```
+
+**Visual representation:**
+
+```
+           good  quality  sound  battery  phone
+Review 1:    3       1      2       0       1     ← "good" appears 3 times
+Review 2:    1       0      0       2       1     ← "battery" appears 2 times
+Review 3:    0       2      1       1       0
+```
+
+**Top words by total count:**
+
+| Word | Total Count |
+|------|------------|
+| good | 448 |
+| quality | 348 |
+| sound | 316 |
+| battery | 263 |
+| phone | 253 |
+
+---
+
+### Method C: TF-IDF
+
+TF-IDF stands for **Term Frequency × Inverse Document Frequency**. It's smarter than BoW because it **penalises words that appear in almost every document** — words that carry little distinguishing information.
+
+**The formula:**
+
+```
+TF(word, doc)   = (count of word in doc) / (total words in doc)
+IDF(word)       = log(total docs / docs containing word)
+TF-IDF(word, doc) = TF × IDF
+```
+
+**Intuition:** The word "good" appears in 400 out of 549 reviews. Its IDF ≈ log(549/400) ≈ 0.31. But the word "amoled" appears in only 5 reviews. Its IDF ≈ log(549/5) ≈ 4.7. TF-IDF gives much higher weight to "amoled" — a word that genuinely distinguishes documents.
+
+```python
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+tfidf_vectorizer = TfidfVectorizer(max_features=500)
+tfidf_matrix = tfidf_vectorizer.fit_transform(df['clean_text'])
+
+print(f"TF-IDF Matrix shape: {tfidf_matrix.shape}")  # (549, 500)
+```
+
+**Top words by mean TF-IDF score:**
+
+| Word | Mean TF-IDF |
+|------|------------|
+| good | 0.0856 |
+| quality | 0.0579 |
+| sound | 0.0549 |
+| product | 0.0539 |
+| phone | 0.0481 |
+
+---
+
+## Step 5: Comparing the Three Methods
+
+Here's a clear side-by-side comparison:
+
+| Aspect | One-Hot Encoding | Bag of Words | TF-IDF |
+|--------|-----------------|--------------|--------|
+| What is stored | Word presence only | Word count per doc | Weighted word score |
+| Cell value type | 0 or 1 | Integer (0, 1, 2, …) | Float (0.0 – 1.0) |
+| Captures frequency | ❌ No | ✅ Yes | ✅ Yes (via TF) |
+| Captures importance | ❌ No | ❌ No | ✅ Yes (via IDF) |
+| Captures word order | ❌ No | ❌ No | ❌ No |
+| Best use case | Small vocab, categories | Short text, baselines | Search, classification |
+
+### Why does BoW fail at semantic understanding?
+
+Consider these three sentences:
+
+```python
+sentences = [
+    "The phone battery life is great",        # Positive
+    "The phone has excellent battery duration", # Positive (synonym)
+    "The phone battery life is terrible",      # Negative
+]
+```
+
+BoW vectors for these sentences:
+
+|  | battery | excellent | great | life | phone | terrible |
+|--|---------|-----------|-------|------|-------|----------|
+| Sent 1 | 1 | 0 | 1 | 1 | 1 | 0 |
+| Sent 2 | 1 | 1 | 0 | 0 | 1 | 0 |
+| Sent 3 | 1 | 0 | 0 | 1 | 1 | 1 |
+
+Sentences 1 and 3 share most words — BoW thinks they're **very similar** even though one is positive and one is negative! Sentence 2 uses synonyms ("excellent", "duration") and gets a **lower similarity** to Sentence 1, even though it means the same thing.
+
+**Root cause:** BoW has no concept of synonyms, antonyms, or word order. Solutions include Word2Vec, GloVe, and BERT.
+
+---
+
+## Step 6: Sparse Matrix Analysis
+
+A critical insight about these feature matrices: they are **sparse** — most values are zero.
+
+```
+BoW Matrix:
+  Shape        : (549, 500)
+  Non-zero vals: 12,454
+  Sparsity     : 95.46%   ← 95% of cells are ZERO
+```
+
+This makes sense: each review uses only a small fraction of the full vocabulary.
+
+**Why does sparsity matter at scale?**
+
+```
+Dense storage for 1M docs × 100K vocab:
+  1,000,000 × 100,000 × 4 bytes = 400 GB of RAM
+
+With 99% sparsity, we only need to store ~4 GB.
+```
+
+That's why `sklearn`'s vectorizers return **sparse matrices** by default — they store only `(row, column, value)` triples for non-zero entries, saving enormous amounts of memory.
+
+---
+
+## Step 7: Sentiment Classification — Putting It All Together
+
+Now the exciting part: **can we predict whether a review is positive or negative?**
+
+We derive sentiment labels from star ratings:
+- ⭐⭐⭐⭐ or ⭐⭐⭐⭐⭐ → **Positive**
+- ⭐ or ⭐⭐ → **Negative**
+- ⭐⭐⭐ → **Neutral** (excluded for binary classification)
+
+Then we train four model combinations:
+
+```python
+from sklearn.linear_model import LogisticRegression
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, classification_report
+
+# Split 80% train / 20% test
+X_bow_train, X_bow_test, y_train, y_test = train_test_split(
+    bow_matrix, y, test_size=0.2, random_state=42, stratify=y)
+
+# Train all four models
+models = [
+    (LogisticRegression(max_iter=1000), X_bow_train,   X_bow_test,   "BoW + Logistic Regression"),
+    (MultinomialNB(),                   X_bow_train,   X_bow_test,   "BoW + Naive Bayes"),
+    (LogisticRegression(max_iter=1000), X_tfidf_train, X_tfidf_test, "TF-IDF + Logistic Regression"),
+    (MultinomialNB(),                   X_tfidf_train, X_tfidf_test, "TF-IDF + Naive Bayes"),
+]
+```
+
+### Results
+
+| Model | Accuracy |
+|-------|----------|
+| BoW + Logistic Regression | 92.08% |
+| **BoW + Naive Bayes** | **93.07%** ← Best |
+| TF-IDF + Logistic Regression | 88.12% |
+| TF-IDF + Naive Bayes | 90.10% |
+
+**Surprising result:** BoW outperformed TF-IDF here! Why?
+
+This dataset is heavily imbalanced (~86% positive reviews). Naive Bayes with raw word counts (BoW) captures the absolute frequency patterns in the dominant class very effectively. TF-IDF, by downweighting common words, actually **loses some of the signal** that distinguishes positive reviews in this particular corpus.
+
+> **Lesson:** There's no universally "best" feature method — it depends on your data and task.
+
+---
+
+## When to Use Each Method
+
+### Use Bag of Words when:
+- Texts are **short** (tweets, SMS, support tickets)
+- Building a **baseline model** to benchmark against
+- Your vocabulary is **small and controlled**
+
+### Use TF-IDF when:
+- Texts are **medium to long** (articles, research papers, product descriptions)
+- You're building a **search engine** or **information retrieval** system
+- You want to extract **keywords** or create summaries
+
+### Limitations of TF-IDF
+
+1. **No semantics** — "good" and "great" are treated as completely unrelated words
+2. **No word order** — "not good" and "good" get the same score for the token "good"
+3. **Out-of-vocabulary words** — new words at inference time are silently ignored
+4. **Context-free** — "bank" (river bank vs. financial bank) gets one IDF weight regardless of context
+
+These limitations are why modern NLP uses transformer models like **BERT** and **GPT**, which understand context and meaning.
+
+---
+
+## Final Summary
+
+| Technique | Captures Frequency | Captures Importance | Best Use |
+|-----------|-------------------|---------------------|----------|
+| One-Hot Encoding | ❌ | ❌ | Categorical data, tiny vocab |
+| Bag of Words | ✅ | ❌ | Simple NLP baselines |
+| TF-IDF | ✅ | ✅ | Search, classification, NLP |
+
+### Key Takeaways
+
+1. **Preprocessing matters enormously.** Removing stopwords, lemmatizing, and lowercasing reduced 23,271 tokens down to a vocabulary of 4,112 unique words — cutting noise by ~82%.
+
+2. **There's no one-size-fits-all feature method.** BoW beat TF-IDF in this experiment due to class imbalance. Always benchmark multiple approaches.
+
+3. **Sparse matrices are essential at scale.** A 95% sparse matrix needs 20× less memory than a dense one. Always use sparse storage for large NLP projects.
+
+4. **All three methods are order-agnostic.** They treat every document as a "bag" of words without considering position. For tasks where context and word order matter (e.g., translation, summarisation), transformer models (BERT, GPT) are the modern solution.
+
+---
+
+## Files & Outputs
+
+The project generates the following outputs:
+- `amazon_reviews.csv` — 549 scraped product reviews
+- `top_words.png` — bar chart of the 20 most frequent words in the cleaned corpus
+- `model_comparison.png` — accuracy comparison across all four classifiers
+
+---
+
+*Built with Python, scikit-learn, NLTK, BeautifulSoup, matplotlib, and seaborn.*
